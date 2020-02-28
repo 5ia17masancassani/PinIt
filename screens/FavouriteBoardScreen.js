@@ -31,18 +31,23 @@ export default class FavouriteBoardScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
             let stateNotes = [];
-            
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").get().then((querySnapshot) => {
-                if (this.state.notesSize !== querySnapshot.size) {
-                    querySnapshot.forEach((doc) => {
-                        stateNotes.push(doc);
-                    })
-                    this.setState({
-                        notes: stateNotes,
-                        boardsSize: querySnapshot.size
-                    });
-                }
+
+            db.collection("users").doc("id: " + user.uid).collection("settings").doc("favourite").get().then((querySnapshot) => {
+                console.log("ID: " + querySnapshot.data().id);
+                db.collection("users").doc("id: " + user.uid).collection("boards").doc(querySnapshot.data().id).collection("notes").get().then((querySnapshot) => {
+                    if (this.state.notesSize !== querySnapshot.size) {
+                        querySnapshot.forEach((doc) => {+
+                            stateNotes.push(doc);
+                        })
+                        this.setState({
+                            notes: stateNotes,
+                            boardsSize: querySnapshot.size
+                        });
+                    }
+                });
             });
+            
+
         });
     }
 

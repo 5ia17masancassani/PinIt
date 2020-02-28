@@ -33,10 +33,6 @@ export default class BoardScreen extends Component {
             let stateNotes = [];
 
             db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").get().then((querySnapshot) => {
-
-            }
-
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").get().then((querySnapshot) => {
                 if (this.state.notesSize !== querySnapshot.size) {
                     querySnapshot.forEach((doc) => {
                         stateNotes.push(doc);

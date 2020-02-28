@@ -52,7 +52,6 @@ export default class EditBoardScreen extends Component {
                     console.error("Error writing document: ", error);
                 });
         });
-
     };
 
     render() {
