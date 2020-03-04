@@ -1,19 +1,17 @@
 import React, {Component} from "react";
-import {
-    StyleSheet,
-    View,
-    PanResponder,
-    Animated,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback, Button
-} from "react-native";
+import {Animated, PanResponder, StyleSheet, Text} from "react-native";
 
 export default class Draggable extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pan: new Animated.ValueXY()
+            pan: new Animated.ValueXY(),
+            view: {
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0
+            },
         };
     }
 
@@ -35,16 +33,19 @@ export default class Draggable extends Component {
             onPanResponderMove: Animated.event([
                 null, {dx: this.state.pan.x, dy: this.state.pan.y},
             ]),
-            onPanResponderTerminate: (evt, gestureState) => {
-                console.log( "Another component has become the responder, so this gesture should be cancelled")
-            },
-            onPanResponderRelease: (e, {dx, dy}) => {
-                //TODO: set boundaries
-                console.log("Dx: " + dx + "Dy: " + dy)
-                Animated.spring( this.state.pan, {
-                    toValue: 0,
-                    bounciness: 50
-                }).start();
+            onPanResponderRelease: (e, g) => {
+                console.log(g.moveX)
+                console.log(this.props.view.width/2)
+                console.log(-(this.props.view.width/2))
+                if (g.moveY < (this.props.view.y + 100) || g.moveX < 60 || g.moveX > this.props.view.width-40 || g.moveY) {
+                    Animated.spring(this.state.pan, {
+                        toValue: 0,
+                        bounciness: 10
+                    }).start();
+                } else if (g.moveY > (this.props.view.y + 100) && g.moveY < (this.props.view.y + 150)) {
+                    this.navigateToNote();
+                }
+
                 this.state.pan.flattenOffset();
 
             },
@@ -56,6 +57,17 @@ export default class Draggable extends Component {
         this.props.navigate('Note');
     }
 
+    setViewXY(x, y, width, height) {
+        this.setState({
+            view: {
+                x: x,
+                y: y,
+                width: width,
+                height: height
+            }
+        })
+    }
+
     render() {
 
         const panStyle = {
@@ -64,13 +76,17 @@ export default class Draggable extends Component {
         }
 
         return (
+            <Animated.View
+                {...this.panResponder.panHandlers}
+                style={[panStyle, styles.circle]}
+                onLayout={({nativeEvent: {layout: {x, y, width, height}}}) => {
+                    this.setViewXY(x, y, width, height)
+                }}
+            >
 
-                    <Animated.View
-                        {...this.panResponder.panHandlers}
-                        style={[panStyle, styles.circle]}
-                    >
-                        <Text>{this.props.title}</Text>
-                    </Animated.View>
+                <Text>{this.props.title}</Text>
+
+            </Animated.View>
 
         );
     }

@@ -7,7 +7,8 @@ export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            boardsSize: 0
+            boardsSize: 0,
+            countNotes: 0
         }
     }
 
@@ -21,13 +22,27 @@ export default class HomeScreen extends Component {
     getBoards() {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
+            let countNotes = 0;
 
             db.collection("users").doc("id: " + user.uid).collection("boards").get().then((querySnapshot) => {
-                if (this.state.boardsSize !== querySnapshot.size) {
+
                     this.setState({
                         boardsSize: querySnapshot.size
                     });
-                }
+                    querySnapshot.forEach((doc) => {
+                        db.collection("users").doc("id: " + user.uid).collection("boards").doc(doc.id).collection("notes").get().then((querySnapshot) => {
+
+                            querySnapshot.forEach((doc) => {
+                                countNotes++
+                            })
+                            this.setState({
+                                countNotes: countNotes,
+                            });
+
+                        });
+                    })
+
+
             });
         });
     }
@@ -46,7 +61,7 @@ export default class HomeScreen extends Component {
                     </View>
                     <View style={styles.bodyPart}>
                         <Text style={styles.flexText}>Notes</Text>
-                        <Text style={styles.flexText}>0</Text>
+                        <Text style={styles.flexText}>{this.state.countNotes}</Text>
                     </View>
                 </View>
 

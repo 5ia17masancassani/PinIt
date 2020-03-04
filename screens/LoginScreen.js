@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, StyleSheet, Text, View, TextInput} from "react-native";
+import {Button, StyleSheet, Text, TextInput, View} from "react-native";
 import * as firebase from "firebase";
 
 export default class LoginScreen extends Component {

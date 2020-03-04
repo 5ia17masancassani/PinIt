@@ -19,6 +19,7 @@ export default class EditBoardScreen extends Component {
             title: this.props.navigation.getParam("board").title,
             size: this.props.navigation.getParam("board").size,
         })
+
     }
 
     buttonPressed = () => {
@@ -26,24 +27,9 @@ export default class EditBoardScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
 
-            firebase.auth().onAuthStateChanged(user => {
-                let db = firebase.firestore();
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).set({
+                title: this.state.title,
 
-                db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).set({
-                    title: this.state.title,
-                    size: this.state.size,
-
-                })
-                    .then(function () {
-                        console.log("Ok");
-                    })
-                    .catch(function (error) {
-                        console.error("Error writing document: ", error);
-                    });
-            });
-
-            db.collection("users").doc("id: " + user.uid).collection("settings").doc("favourite").set({
-                id: this.props.navigation.getParam("id")
             })
                 .then(function () {
                     console.log("Ok");
@@ -51,8 +37,46 @@ export default class EditBoardScreen extends Component {
                 .catch(function (error) {
                     console.error("Error writing document: ", error);
                 });
+
+            if (this.state.favourite) {
+                db.collection("users").doc("id: " + user.uid).collection("settings").doc("favourite").set({
+                    id: this.props.navigation.getParam("id"),
+                    size: this.props.navigation.getParam("board").size,
+                })
+                    .then(function () {
+                        console.log("Ok");
+                    })
+                    .catch(function (error) {
+                        console.error("Error writing document: ", error);
+                    });
+            } else {
+                db.collection("users").doc("id: " + user.uid).collection("settings").doc("favourite").set({
+                    id: ""
+                })
+                    .then(function () {
+                        console.log("Ok");
+                    })
+                    .catch(function (error) {
+                        console.error("Error writing document: ", error);
+                    });
+            }
         });
     };
+
+    deleteBoard() {
+        let db = firebase.firestore();
+        const {navigate} = this.props.navigation;
+
+        firebase.auth().onAuthStateChanged(user => {
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).delete().then(function () {
+                console.log("Document successfully deleted!");
+                navigate('Boards')
+            }).catch(function (error) {
+                console.error("Error removing document: ", error);
+            });
+        })
+    }
+
 
     render() {
         const {navigate} = this.props.navigation;
@@ -74,7 +98,6 @@ export default class EditBoardScreen extends Component {
                         />
                     </View>
 
-
                 </View>
 
                 <View style={styles.body}>
@@ -91,7 +114,6 @@ export default class EditBoardScreen extends Component {
                         />
                     </View>
 
-
                 </View>
 
                 <View style={styles.body}>
@@ -102,9 +124,9 @@ export default class EditBoardScreen extends Component {
 
                     <View style={styles.bodyPartRight}>
                         <Switch value={this.state.favourite} onValueChange={() => {
-                            if(this.state.favourite){
+                            if (this.state.favourite) {
                                 this.setState({favourite: false})
-                            } else{
+                            } else {
                                 this.setState({favourite: true})
                             }
 
@@ -120,7 +142,18 @@ export default class EditBoardScreen extends Component {
                         title="Save"
                         onPress={() => {
                             this.buttonPressed();
-                            navigate('Board');
+                            navigate('Board', {
+                                board: {
+                                    title: this.state.title,
+                                    size: this.state.size
+                                }
+                            });
+                        }}
+                    />
+                    <Button
+                        title="Delete"
+                        onPress={() => {
+                            this.deleteBoard()
                         }}
                     />
                 </View>

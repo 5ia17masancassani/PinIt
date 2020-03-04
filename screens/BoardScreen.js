@@ -51,14 +51,13 @@ export default class BoardScreen extends Component {
 
         return this.state.notes.map((doc) => {
             return (
-                <Draggable infos={this.state.infos} title={doc.data().title} color={doc.data().color}
+                <Draggable view={this.state.view} title={doc.data().title} color={doc.data().color}
                            navigate={(path) => navigate(path)}/>
             )
         })
     }
 
     setViewXY(x, y, width, height) {
-        console.log("X: " + x + "/Y: " + y + "/Width: " + width + "/Height: " + height)
         this.setState({
             view: {
                 x: x,
@@ -72,6 +71,7 @@ export default class BoardScreen extends Component {
 
     render() {
         const {navigate} = this.props.navigation;
+
 
         return (
             <View style={styles.container}>
@@ -100,13 +100,9 @@ export default class BoardScreen extends Component {
                 <View onLayout={({nativeEvent: {layout: {x, y, width, height}}}) => {
                     this.setViewXY(x, y, width, height)
                 }} style={styles.body}>
-                    <Button
-                        title="Open"
-                        onPress={() => {
-                            navigate('Note');
-                        }}
-                    />
-
+                    <Text
+                        style={{fontSize: 24, backgroundColor: '#0be', height: 50, paddingLeft: 80, paddingRight: 80}}>Drop
+                        here to open</Text>
                     {this.renderNoteButtons()}
 
                 </View>
@@ -151,6 +147,8 @@ const styles = StyleSheet.create({
         flex: 10,
         fontSize: 24,
         backgroundColor: '#eea',
+        alignItems: 'center',
+
 
     },
     drag: {

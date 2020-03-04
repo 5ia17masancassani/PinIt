@@ -120,12 +120,14 @@ let LoginNavigator = createStackNavigator(
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: '#f4511e',
+                height: 50
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
                 fontWeight: 'bold',
 
             },
+
         },
     });
 

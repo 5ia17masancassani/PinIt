@@ -1,6 +1,7 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {StyleSheet, View, Button, ScrollView} from 'react-native';
 import * as firebase from "firebase";
+
 
 export default class BoardsScreen extends Component {
 
@@ -60,7 +61,9 @@ export default class BoardsScreen extends Component {
             <View style={styles.container}>
 
                 <View style={styles.body}>
-                    {this.renderBoardButtons()}
+                    <ScrollView>
+                        {this.renderBoardButtons()}
+                    </ScrollView>
                 </View>
 
                 <View style={styles.button}>
@@ -97,7 +100,7 @@ const
             fontSize: 24
         },
         body: {
-            flex: 5,
+            flex: 8,
             flexDirection: 'row',
             justifyContent: 'center',
             fontSize: 24,
@@ -109,6 +112,6 @@ const
             height: 200,
         },
         button: {
-            flex: 4
+            flex: 1
         }
     });

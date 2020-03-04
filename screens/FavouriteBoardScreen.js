@@ -17,7 +17,10 @@ export default class FavouriteBoardScreen extends Component {
                 width: 0,
                 height: 0
             },
-            favourite: ""
+            favourite: "",
+            load: false,
+            id: "",
+            board: {}
         }
     }
 
@@ -33,21 +36,27 @@ export default class FavouriteBoardScreen extends Component {
             let stateNotes = [];
 
             db.collection("users").doc("id: " + user.uid).collection("settings").doc("favourite").get().then((querySnapshot) => {
-                console.log("ID: " + querySnapshot.data().id);
-                db.collection("users").doc("id: " + user.uid).collection("boards").doc(querySnapshot.data().id).collection("notes").get().then((querySnapshot) => {
-                    if (this.state.notesSize !== querySnapshot.size) {
-                        querySnapshot.forEach((doc) => {+
-                            stateNotes.push(doc);
-                        })
-                        this.setState({
-                            notes: stateNotes,
-                            boardsSize: querySnapshot.size
-                        });
-                    }
-                });
+                this.setState({id: querySnapshot.data().id})
+                if (querySnapshot.data().id !== undefined) {
+                    this.setState({load: true})
+                    db.collection("users").doc("id: " + user.uid).collection("boards").doc(querySnapshot.data().id).get().then((querySnapshot) => {
+                        this.setState({board: querySnapshot.data()})
+                    });
+                    db.collection("users").doc("id: " + user.uid).collection("boards").doc(querySnapshot.data().id).collection("notes").get().then((querySnapshot) => {
+                        if (this.state.notesSize !== querySnapshot.size) {
+                            querySnapshot.forEach((doc) => {
+                                stateNotes.push(doc);
+                            })
+                            this.setState({
+                                notes: stateNotes,
+                                boardsSize: querySnapshot.size
+                            });
+                        }
+                    });
+                } else {
+                    this.setState({load: false})
+                }
             });
-            
-
         });
     }
 
@@ -63,7 +72,6 @@ export default class FavouriteBoardScreen extends Component {
     }
 
     setViewXY(x, y, width, height) {
-        console.log("X: " + x + "/Y: " + y + "/Width: " + width + "/Height: " + height)
         this.setState({
             view: {
                 x: x,
@@ -74,59 +82,82 @@ export default class FavouriteBoardScreen extends Component {
         })
     }
 
-
     render() {
         const {navigate} = this.props.navigation;
 
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <View style={styles.headerPart}>
+                {this.state.load && this.state.id !== "" &&
+
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <View style={styles.headerPart}>
+                        </View>
+
+                        <View style={styles.headerPart}>
+                            <Text>{this.state.board.title}</Text>
+                        </View>
+
+                        <View style={styles.headerPart}>
+                            <Button
+                                title="Edit"
+                                onPress={() => {
+                                    navigate('EditBoard', {
+                                        id: this.state.id,
+                                        board: this.state.board
+                                    });
+                                }}
+                            />
+                        </View>
+
                     </View>
 
-                    <View style={styles.headerPart}>
-                        <Text>Favourite</Text>
+                    <View onLayout={({nativeEvent: {layout: {x, y, width, height}}}) => {
+                        this.setViewXY(x, y, width, height)
+                    }} style={styles.body}>
+                        <Text
+                            style={{
+                                fontSize: 24,
+                                backgroundColor: '#0be',
+                                height: 50,
+                                paddingLeft: 80,
+                                paddingRight: 80
+                            }}>Drop
+                            here to open</Text>
+
+                        {this.renderNoteButtons()}
+
                     </View>
 
-                    <View style={styles.headerPart}>
+                    <View style={styles.button}>
                         <Button
-                            title="Edit"
+                            title="Add Note"
                             onPress={() => {
-                                navigate('EditBoard', {
-                                    id: this.props.navigation.getParam("id"),
-                                    board: this.props.navigation.getParam("board")
+                                navigate('CreateNote', {
+                                    id: this.props.navigation.getParam("id")
                                 });
                             }}
                         />
                     </View>
+                </View>
+                }
+
+                {!this.state.load || this.state.id === ""  &&
+                <View>
+                    <View style={styles.headerPart}>
+                    </View>
+
+                    <View style={styles.headerPart}>
+                        <Text>No Favourite: Set Favourite in Edit Board</Text>
+                    </View>
+                    <View style={styles.headerPart}>
+                    </View>
 
                 </View>
+                }
 
-                <View onLayout={({nativeEvent: {layout: {x, y, width, height}}}) => {
-                    this.setViewXY(x, y, width, height)
-                }} style={styles.body}>
-                    <Button
-                        title="Open"
-                        onPress={() => {
-                            navigate('Note');
-                        }}
-                    />
-
-                    {this.renderNoteButtons()}
-
-                </View>
-
-                <View style={styles.button}>
-                    <Button
-                        title="Add Note"
-                        onPress={() => {
-                            navigate('CreateNote', {
-                                id: this.props.navigation.getParam("id")
-                            });
-                        }}
-                    />
-                </View>
             </View>
+
         )
     }
     ;
@@ -156,6 +187,8 @@ const styles = StyleSheet.create({
         flex: 10,
         fontSize: 24,
         backgroundColor: '#eea',
+        alignItems: 'center',
+
 
     },
     drag: {
