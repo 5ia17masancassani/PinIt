@@ -40,7 +40,7 @@ export default class Draggable extends Component {
                         bounciness: 10
                     }).start();
 
-                } else if (g.moveY > (this.props.view.y + 100) && g.moveY < (this.props.view.y + 150)) {
+                } else if (g.moveY > (this.props.view.y + 100) && g.moveY < (this.props.view.y + 160)) {
                     this.navigateToNote();
                 }
 
@@ -52,7 +52,13 @@ export default class Draggable extends Component {
     }
 
     navigateToNote = () => {
-        this.props.navigate(this.props.note, {id: this.props.id, title: this.props.title, color: this.props.color, text: this.props.text, back: this.props.back});
+        this.props.navigate(this.props.note, {
+            id: this.props.id,
+            title: this.props.title,
+            color: this.props.color,
+            text: this.props.text,
+            back: this.props.back
+        });
     }
 
     setViewXY(x, y, width, height) {

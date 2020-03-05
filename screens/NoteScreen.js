@@ -72,6 +72,7 @@ export default class NoteScreen extends Component {
                             title="Edit"
                             onPress={() => {
                                 navigate('EditNote', {
+                                    id: this.props.navigation.getParam("id"),
                                     title: this.props.navigation.getParam("title"),
                                     color: this.props.navigation.getParam("color"),
                                     text: this.state.text

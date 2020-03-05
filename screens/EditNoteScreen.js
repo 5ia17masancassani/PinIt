@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {StyleSheet, Text, View, Button, TextInput} from 'react-native';
-import {ColorPicker} from 'react-native-color-picker'
+import {ColorPicker, fromHsv} from 'react-native-color-picker'
 import * as firebase from "firebase";
 
 
@@ -41,6 +41,20 @@ export default class EditNoteScreen extends Component {
 
     };
 
+    deleteNote() {
+        let db = firebase.firestore();
+        const {navigate} = this.props.navigation;
+
+        firebase.auth().onAuthStateChanged(user => {
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.props.navigation.getParam("title")).delete().then(function () {
+                console.log("Note successfully deleted!");
+                navigate('Boards')
+            }).catch(function (error) {
+                console.error("Error removing document: ", error);
+            });
+        })
+    }
+
     render() {
         const {navigate} = this.props.navigation;
 
@@ -56,6 +70,7 @@ export default class EditNoteScreen extends Component {
                     <View style={styles.bodyPartRight}>
                         <TextInput
                             style={{height: 40, width: 150, marginTop: 20, borderColor: 'gray', borderBottomWidth: 2}}
+                            maxLength={10}
                             onChangeText={title => this.setState({title})}
                             value={this.state.title}
                         />
@@ -72,7 +87,7 @@ export default class EditNoteScreen extends Component {
                     <View style={styles.bodyPartRight}>
                         <ColorPicker style={{height: 200, width: 200}}
                                      defaultColor={this.props.navigation.getParam("color")}
-                                     onColorSelected={color => this.setState({color})}
+                                     onColorChange={(o) => this.setState({color: fromHsv({h: o.h, s: o.s, v: o.v})})}
                         />
                     </View>
 
@@ -84,7 +99,17 @@ export default class EditNoteScreen extends Component {
                         title="Save"
                         onPress={() => {
                             this.buttonPressed();
-                            navigate('Note');
+                            navigate('Note', {
+                                title: this.state.title,
+                                color: this.state.color,
+                                text: this.props.navigation.getParam("text")
+                            });
+                        }}
+                    />
+                    <Button
+                        title="Delete"
+                        onPress={() => {
+                            this.deleteNote()
                         }}
                     />
                 </View>
@@ -116,11 +141,13 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 24,
         flexDirection: 'row',
+        paddingBottom: 50,
     },
     bodyColor: {
         flex: 6,
         fontSize: 24,
         flexDirection: 'row',
+
     },
     bodyPartLeft: {
         flex: 1,

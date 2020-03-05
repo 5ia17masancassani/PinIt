@@ -26,21 +26,21 @@ export default class HomeScreen extends Component {
 
             db.collection("users").doc("id: " + user.uid).collection("boards").get().then((querySnapshot) => {
 
-                    this.setState({
-                        boardsSize: querySnapshot.size
-                    });
-                    querySnapshot.forEach((doc) => {
-                        db.collection("users").doc("id: " + user.uid).collection("boards").doc(doc.id).collection("notes").get().then((querySnapshot) => {
+                this.setState({
+                    boardsSize: querySnapshot.size
+                });
+                querySnapshot.forEach((doc) => {
+                    db.collection("users").doc("id: " + user.uid).collection("boards").doc(doc.id).collection("notes").get().then((querySnapshot) => {
 
-                            querySnapshot.forEach((doc) => {
-                                countNotes++
-                            })
-                            this.setState({
-                                countNotes: countNotes,
-                            });
-
+                        querySnapshot.forEach((doc) => {
+                            countNotes++
+                        })
+                        this.setState({
+                            countNotes: countNotes,
                         });
-                    })
+
+                    });
+                })
 
 
             });

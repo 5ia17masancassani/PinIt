@@ -101,7 +101,7 @@ export default class BoardScreen extends Component {
                         <Button
                             title="Add Note"
                             onPress={() => {
-                                console.log("damn: "+ this.props.navigation.getParam("id"))
+                                console.log("damn: " + this.props.navigation.getParam("id"))
                                 navigate('CreateNote', {
                                     id: this.props.navigation.getParam("id"),
                                     back: 'Board'

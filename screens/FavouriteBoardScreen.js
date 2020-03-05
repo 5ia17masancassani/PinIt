@@ -65,8 +65,9 @@ export default class FavouriteBoardScreen extends Component {
 
         return this.state.notes.map((doc) => {
             return (
-                <Draggable view={this.state.view} title={doc.data().title} color={doc.data().color} text={doc.data().text}
-                           key={doc.id} back={"Favourite"}  note={"FavouriteNote"}
+                <Draggable view={this.state.view} title={doc.data().title} color={doc.data().color}
+                           text={doc.data().text}
+                           key={doc.id} back={"Favourite"} note={"FavouriteNote"}
                            navigate={(path, object) => navigate(path, object)}/>
             )
         })
@@ -96,7 +97,6 @@ export default class FavouriteBoardScreen extends Component {
                         <View style={styles.headerPartLeft}>
                             <Text style={{fontSize: 24}}>{this.state.board.title}</Text>
                         </View>
-
 
 
                     </View>
