@@ -17,7 +17,7 @@ export default class CreateBoardScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
 
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc("id: " + this.state.title).set({
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc().set({
                 title: this.state.title,
                 size: this.state.size,
 

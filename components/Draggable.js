@@ -52,12 +52,14 @@ export default class Draggable extends Component {
     }
 
     navigateToNote = () => {
+        console.log("Drag: "+ this.props.noteId)
         this.props.navigate(this.props.note, {
             id: this.props.id,
             title: this.props.title,
             color: this.props.color,
             text: this.props.text,
-            back: this.props.back
+            back: this.props.back,
+            key: this.props.noteId
         });
     }
 

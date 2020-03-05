@@ -25,7 +25,7 @@ export default class EditNoteScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
 
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.props.navigation.getParam("title")).set({
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc(this.props.navigation.getParam("key")).set({
                 title: this.state.title,
                 color: this.state.color,
                 text: this.props.navigation.getParam("text")
@@ -46,7 +46,7 @@ export default class EditNoteScreen extends Component {
         const {navigate} = this.props.navigation;
 
         firebase.auth().onAuthStateChanged(user => {
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.props.navigation.getParam("title")).delete().then(function () {
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc(this.props.navigation.getParam("key")).delete().then(function () {
                 console.log("Note successfully deleted!");
                 navigate('Boards')
             }).catch(function (error) {

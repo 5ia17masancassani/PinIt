@@ -19,7 +19,7 @@ export default class CreateNoteScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
 
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.state.title).set({
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc().set({
                 title: this.state.title,
                 color: this.state.color,
                 text: ""

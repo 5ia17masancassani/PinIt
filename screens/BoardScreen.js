@@ -50,9 +50,10 @@ export default class BoardScreen extends Component {
         const {navigate} = this.props.navigation;
 
         return this.state.notes.map((doc) => {
+            console.log("Board: "+doc.id)
             return (
                 <Draggable view={this.state.view} id={this.props.navigation.getParam("id")} title={doc.data().title}
-                           key={doc.id} back={"Board"} note={"Note"}
+                           key={doc.id} back={"Board"} note={"Note"} noteId={doc.id}
                            color={doc.data().color} text={doc.data().text}
                            navigate={(path, object) => navigate(path, object)}/>
             )

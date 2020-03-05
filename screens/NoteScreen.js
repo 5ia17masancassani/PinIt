@@ -17,7 +17,7 @@ export default class NoteScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
 
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.props.navigation.getParam("title")).get().then((querySnapshot) => {
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc(this.props.navigation.getParam("key")).get().then((querySnapshot) => {
                 if (this.state.text !== querySnapshot.data().text) {
                     this.setState({
                         text: querySnapshot.data().text
@@ -38,7 +38,8 @@ export default class NoteScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
 
-            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.props.navigation.getParam("title")).set({
+            console.log("Note: "+this.props.navigation.getParam("key"))
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc(this.props.navigation.getParam("key")).set({
                 title: this.props.navigation.getParam("title"),
                 color: this.props.navigation.getParam("color"),
                 text: this.state.text
@@ -75,7 +76,8 @@ export default class NoteScreen extends Component {
                                     id: this.props.navigation.getParam("id"),
                                     title: this.props.navigation.getParam("title"),
                                     color: this.props.navigation.getParam("color"),
-                                    text: this.state.text
+                                    text: this.state.text,
+                                    key: this.props.navigation.getParam("key")
                                 });
                             }}
                         />
