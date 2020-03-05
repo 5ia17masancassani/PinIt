@@ -51,8 +51,10 @@ export default class BoardScreen extends Component {
 
         return this.state.notes.map((doc) => {
             return (
-                <Draggable view={this.state.view} title={doc.data().title} color={doc.data().color}
-                           navigate={(path) => navigate(path)}/>
+                <Draggable view={this.state.view} id={this.props.navigation.getParam("id")} title={doc.data().title}
+                           key={doc.id} back={"Board"} note={"Note"}
+                           color={doc.data().color} text={doc.data().text}
+                           navigate={(path, object) => navigate(path, object)}/>
             )
         })
     }
@@ -76,24 +78,11 @@ export default class BoardScreen extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <View style={styles.headerPart}>
+
+                    <View style={styles.headerPartLeft}>
+                        <Text style={{fontSize: 24}}>{this.props.navigation.getParam("board").title}</Text>
                     </View>
 
-                    <View style={styles.headerPart}>
-                        <Text>{this.props.navigation.getParam("board").title}</Text>
-                    </View>
-
-                    <View style={styles.headerPart}>
-                        <Button
-                            title="Edit"
-                            onPress={() => {
-                                navigate('EditBoard', {
-                                    id: this.props.navigation.getParam("id"),
-                                    board: this.props.navigation.getParam("board")
-                                });
-                            }}
-                        />
-                    </View>
 
                 </View>
 
@@ -101,21 +90,37 @@ export default class BoardScreen extends Component {
                     this.setViewXY(x, y, width, height)
                 }} style={styles.body}>
                     <Text
-                        style={{fontSize: 24, backgroundColor: '#0be', height: 50, paddingLeft: 80, paddingRight: 80}}>Drop
+                        style={{fontSize: 24, backgroundColor: '#ffa', height: 50, paddingLeft: 80, paddingRight: 80}}>Drop
                         here to open</Text>
                     {this.renderNoteButtons()}
 
                 </View>
 
                 <View style={styles.button}>
-                    <Button
-                        title="Add Note"
-                        onPress={() => {
-                            navigate('CreateNote', {
-                                id: this.props.navigation.getParam("id")
-                            });
-                        }}
-                    />
+                    <View style={{flex: 1}}>
+                        <Button
+                            title="Add Note"
+                            onPress={() => {
+                                console.log("damn: "+ this.props.navigation.getParam("id"))
+                                navigate('CreateNote', {
+                                    id: this.props.navigation.getParam("id"),
+                                    back: 'Board'
+                                });
+                            }}
+                        />
+                    </View>
+                    <View style={{flex: 1}}>
+                        <Button
+                            title="Edit"
+                            onPress={() => {
+                                navigate('EditBoard', {
+                                    id: this.props.navigation.getParam("id"),
+                                    board: this.props.navigation.getParam("board"),
+                                    back: 'Board'
+                                });
+                            }}
+                        />
+                    </View>
                 </View>
             </View>
         )
@@ -126,7 +131,7 @@ export default class BoardScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ffa',
+        backgroundColor: '#eea',
         alignItems: 'stretch',
 
     },
@@ -138,7 +143,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        backgroundColor: '#afa',
+        backgroundColor: '#eea',
     },
     flexText: {
         fontSize: 24
@@ -161,23 +166,26 @@ const styles = StyleSheet.create({
     headerBodyLeft: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#aaa',
+        backgroundColor: '#eea',
     },
     headerBodyRight: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#bbb',
+        backgroundColor: '#eea',
     },
+
 
     headerPart: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#fff',
+        justifyContent: 'center',
+        backgroundColor: '#eea',
 
     },
     button: {
         flex: 1,
-        backgroundColor: '#faa',
+        backgroundColor: '#eea',
+        flexDirection: 'row',
     },
     buttonHeight: {
         height: 50,

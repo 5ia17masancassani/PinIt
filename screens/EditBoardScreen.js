@@ -29,6 +29,7 @@ export default class EditBoardScreen extends Component {
 
             db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).set({
                 title: this.state.title,
+                size: this.state.size,
 
             })
                 .then(function () {
@@ -41,7 +42,6 @@ export default class EditBoardScreen extends Component {
             if (this.state.favourite) {
                 db.collection("users").doc("id: " + user.uid).collection("settings").doc("favourite").set({
                     id: this.props.navigation.getParam("id"),
-                    size: this.props.navigation.getParam("board").size,
                 })
                     .then(function () {
                         console.log("Ok");
@@ -93,6 +93,7 @@ export default class EditBoardScreen extends Component {
                     <View style={styles.bodyPartRight}>
                         <TextInput
                             style={{height: 40, width: 150, marginTop: 20, borderColor: 'gray', borderBottomWidth: 2}}
+                            maxLength={16}
                             onChangeText={title => this.setState({title})}
                             value={this.state.title}
                         />
@@ -109,6 +110,7 @@ export default class EditBoardScreen extends Component {
                     <View style={styles.bodyPartRight}>
                         <TextInput
                             style={{height: 40, width: 150, marginTop: 20, borderColor: 'gray', borderBottomWidth: 2}}
+                            keyboardType={'numeric'}
                             onChangeText={size => this.setState({size})}
                             value={this.state.size}
                         />
@@ -138,11 +140,12 @@ export default class EditBoardScreen extends Component {
 
                 <View style={styles.button}>
 
+                    {this.state.title !== "" && this.state.size !== "" && this.state.size !== "0" &&
                     <Button
                         title="Save"
                         onPress={() => {
                             this.buttonPressed();
-                            navigate('Board', {
+                            navigate(this.props.navigation.getParam("back"), {
                                 board: {
                                     title: this.state.title,
                                     size: this.state.size
@@ -150,6 +153,7 @@ export default class EditBoardScreen extends Component {
                             });
                         }}
                     />
+                    }
                     <Button
                         title="Delete"
                         onPress={() => {

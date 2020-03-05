@@ -65,8 +65,9 @@ export default class FavouriteBoardScreen extends Component {
 
         return this.state.notes.map((doc) => {
             return (
-                <Draggable infos={this.state.infos} title={doc.data().title} color={doc.data().color}
-                           navigate={(path) => navigate(path)}/>
+                <Draggable view={this.state.view} title={doc.data().title} color={doc.data().color} text={doc.data().text}
+                           key={doc.id} back={"Favourite"}  note={"FavouriteNote"}
+                           navigate={(path, object) => navigate(path, object)}/>
             )
         })
     }
@@ -87,28 +88,16 @@ export default class FavouriteBoardScreen extends Component {
 
         return (
             <View style={styles.container}>
-                {this.state.load && this.state.id !== "" &&
+                {this.state.load && this.state.id !== "" && this.state.id !== undefined &&
 
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <View style={styles.headerPart}>
+
+                        <View style={styles.headerPartLeft}>
+                            <Text style={{fontSize: 24}}>{this.state.board.title}</Text>
                         </View>
 
-                        <View style={styles.headerPart}>
-                            <Text>{this.state.board.title}</Text>
-                        </View>
 
-                        <View style={styles.headerPart}>
-                            <Button
-                                title="Edit"
-                                onPress={() => {
-                                    navigate('EditBoard', {
-                                        id: this.state.id,
-                                        board: this.state.board
-                                    });
-                                }}
-                            />
-                        </View>
 
                     </View>
 
@@ -118,7 +107,7 @@ export default class FavouriteBoardScreen extends Component {
                         <Text
                             style={{
                                 fontSize: 24,
-                                backgroundColor: '#0be',
+                                backgroundColor: '#ffa',
                                 height: 50,
                                 paddingLeft: 80,
                                 paddingRight: 80
@@ -130,19 +119,12 @@ export default class FavouriteBoardScreen extends Component {
                     </View>
 
                     <View style={styles.button}>
-                        <Button
-                            title="Add Note"
-                            onPress={() => {
-                                navigate('CreateNote', {
-                                    id: this.props.navigation.getParam("id")
-                                });
-                            }}
-                        />
+
                     </View>
                 </View>
                 }
 
-                {!this.state.load || this.state.id === ""  &&
+                {!this.state.load || this.state.id === "" &&
                 <View>
                     <View style={styles.headerPart}>
                     </View>
@@ -166,7 +148,7 @@ export default class FavouriteBoardScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ffa',
+        backgroundColor: '#eea',
         alignItems: 'stretch',
 
     },
@@ -178,7 +160,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        backgroundColor: '#afa',
+        backgroundColor: '#eea',
     },
     flexText: {
         fontSize: 24
@@ -201,23 +183,29 @@ const styles = StyleSheet.create({
     headerBodyLeft: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#aaa',
+        backgroundColor: '#eea',
     },
     headerBodyRight: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#bbb',
+        backgroundColor: '#eea',
     },
 
-    headerPart: {
+    headerPartLeft: {
+        flex: 2,
+        alignItems: 'center',
+        backgroundColor: '#eea',
+
+    },
+    headerPartRight: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#eea',
 
     },
     button: {
         flex: 1,
-        backgroundColor: '#faa',
+        backgroundColor: '#eea',
     },
     buttonHeight: {
         height: 50,

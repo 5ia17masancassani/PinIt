@@ -3,7 +3,7 @@ import {Button, StyleSheet, View, TextInput, Text} from 'react-native';
 import * as firebase from "firebase";
 
 
-export default class NoteScreen extends Component {
+export default class FavouriteNoteScreen extends Component {
 
     constructor(props) {
         super(props);
@@ -68,38 +68,22 @@ export default class NoteScreen extends Component {
                     </View>
 
                     <View style={styles.headerPart}>
-                        <Button
-                            title="Edit"
-                            onPress={() => {
-                                navigate('EditNote', {
-                                    title: this.props.navigation.getParam("title"),
-                                    color: this.props.navigation.getParam("color"),
-                                    text: this.state.text
-                                });
-                            }}
-                        />
                     </View>
 
                 </View>
 
                 <View style={styles.body}>
                     <TextInput style={{marginLeft: 10, marginRight: 10}}
+                               editable={false}
                                multiline={true}
                                numberOfLines={4}
                                placeholder={"Notes..."}
                                borderWidth={1}
-                               onChangeText={(text) => this.setState({text})}
                                value={this.state.text}/>
                 </View>
 
                 <View style={styles.button}>
-                    <Button
-                        title="Save"
-                        onPress={() => {
-                            this.buttonPressed();
-                            navigate(this.props.navigation.getParam("back"));
-                        }}
-                    />
+
                 </View>
 
 

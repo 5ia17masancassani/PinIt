@@ -46,6 +46,7 @@ export default class BoardsScreen extends Component {
             return (
                 <Button
                     title={doc.data().title}
+                    key={doc.id}
                     onPress={() => {
                         navigate('Board', {id: doc.id, board: doc.data()});
                     }}
@@ -61,7 +62,7 @@ export default class BoardsScreen extends Component {
             <View style={styles.container}>
 
                 <View style={styles.body}>
-                    <ScrollView>
+                    <ScrollView style={{backgroundColor: '#ffb'}}>
                         {this.renderBoardButtons()}
                     </ScrollView>
                 </View>

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {StyleSheet, Text, View, Button, TextInput} from 'react-native';
 import {ColorPicker} from 'react-native-color-picker'
+import * as firebase from "firebase";
 
 
 export default class EditNoteScreen extends Component {
@@ -9,10 +10,36 @@ export default class EditNoteScreen extends Component {
         super(props);
         this.state = {
             title: "",
-            size: "",
             color: ""
         }
     }
+
+    componentDidMount() {
+        this.setState({
+            title: this.props.navigation.getParam("title"),
+        })
+    }
+
+    buttonPressed = () => {
+
+        firebase.auth().onAuthStateChanged(user => {
+            let db = firebase.firestore();
+
+            db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.props.navigation.getParam("title")).set({
+                title: this.state.title,
+                color: this.state.color,
+                text: this.props.navigation.getParam("text")
+
+            })
+                .then(function () {
+                    console.log("Ok");
+                })
+                .catch(function (error) {
+                    console.error("Error writing document: ", error);
+                });
+        });
+
+    };
 
     render() {
         const {navigate} = this.props.navigation;
@@ -44,6 +71,7 @@ export default class EditNoteScreen extends Component {
 
                     <View style={styles.bodyPartRight}>
                         <ColorPicker style={{height: 200, width: 200}}
+                                     defaultColor={this.props.navigation.getParam("color")}
                                      onColorSelected={color => this.setState({color})}
                         />
                     </View>
@@ -56,7 +84,7 @@ export default class EditNoteScreen extends Component {
                         title="Save"
                         onPress={() => {
                             this.buttonPressed();
-                            navigate('Home');
+                            navigate('Note');
                         }}
                     />
                 </View>

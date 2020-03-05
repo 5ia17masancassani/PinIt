@@ -22,6 +22,7 @@ export default class CreateNoteScreen extends Component {
             db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).collection("notes").doc("id: " + this.state.title).set({
                 title: this.state.title,
                 color: this.state.color,
+                text: ""
 
             })
                 .then(function () {
@@ -49,6 +50,7 @@ export default class CreateNoteScreen extends Component {
                     <View style={styles.bodyPartRight}>
                         <TextInput
                             style={{height: 40, width: 150, marginTop: 20, borderColor: 'gray', borderBottomWidth: 2}}
+                            maxLength={10}
                             onChangeText={title => this.setState({title})}
                             value={this.state.title}
                         />
@@ -65,6 +67,7 @@ export default class CreateNoteScreen extends Component {
 
                     <View style={styles.bodyPartRight}>
                         <ColorPicker style={{height: 200, width: 200}}
+                                     defaultColor={'#f00'}
                                      onColorChange={(o) => this.setState({color: fromHsv({h: o.h, s: o.s, v: o.v})})}
                         />
                     </View>
@@ -78,7 +81,7 @@ export default class CreateNoteScreen extends Component {
                         title="Save"
                         onPress={() => {
                             this.buttonPressed();
-                            navigate('Board');
+                            navigate(this.props.navigation.getParam("back"));
                         }}
                     />
                     }

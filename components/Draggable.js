@@ -27,21 +27,19 @@ export default class Draggable extends Component {
 
             onPanResponderGrant: (e, gestureState) => {
                 this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value});
-                this.state.pan.setValue({x: 0, y: 0});
+                //this.state.pan.setValue({x: 0, y: 0});
             },
 
             onPanResponderMove: Animated.event([
                 null, {dx: this.state.pan.x, dy: this.state.pan.y},
             ]),
             onPanResponderRelease: (e, g) => {
-                console.log(g.moveX)
-                console.log(this.props.view.width/2)
-                console.log(-(this.props.view.width/2))
-                if (g.moveY < (this.props.view.y + 100) || g.moveX < 60 || g.moveX > this.props.view.width-40 || g.moveY) {
+                if (g.moveY < (this.props.view.y + 100) || g.moveX < 50 || g.moveX > this.props.view.width - 30 || g.moveY > (this.props.view.y + this.props.view.height + 80)) {
                     Animated.spring(this.state.pan, {
                         toValue: 0,
                         bounciness: 10
                     }).start();
+
                 } else if (g.moveY > (this.props.view.y + 100) && g.moveY < (this.props.view.y + 150)) {
                     this.navigateToNote();
                 }
@@ -54,7 +52,7 @@ export default class Draggable extends Component {
     }
 
     navigateToNote = () => {
-        this.props.navigate('Note');
+        this.props.navigate(this.props.note, {id: this.props.id, title: this.props.title, color: this.props.color, text: this.props.text, back: this.props.back});
     }
 
     setViewXY(x, y, width, height) {

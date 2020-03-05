@@ -11,6 +11,7 @@ import CreateNoteScreen from "./screens/CreateNoteScreen";
 import EditBoardScreen from "./screens/EditBoardScreen";
 import EditNoteScreen from "./screens/EditNoteScreen";
 import FavouriteBoardScreen from "./screens/FavouriteBoardScreen";
+import FavouriteNoteScreen from "./screens/FavouriteNoteScreen";
 import HomeScreen from "./screens/HomeScreen.js";
 import LoadingScreen from "./screens/LoadingScreen.js";
 import LoginScreen from "./screens/LoginScreen.js";
@@ -56,7 +57,7 @@ let FavouriteNavigator = createStackNavigator(
         Favourite: FavouriteBoardScreen,
         EditBoard: EditBoardScreen,
         CreateNote: CreateNoteScreen,
-        Note: NoteScreen,
+        FavouriteNote: FavouriteNoteScreen,
         EditNote: EditNoteScreen,
     },
     {

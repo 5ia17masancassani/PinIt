@@ -47,6 +47,7 @@ export default class CreateBoardScreen extends Component {
                     <View style={styles.bodyPartRight}>
                         <TextInput
                             style={{height: 40, width: 150, marginTop: 20, borderColor: 'gray', borderBottomWidth: 2}}
+                            maxLength={16}
                             onChangeText={title => this.setState({title})}
                             value={this.state.title}
                         />
@@ -64,6 +65,8 @@ export default class CreateBoardScreen extends Component {
                     <View style={styles.bodyPartRight}>
                         <TextInput
                             style={{height: 40, width: 150, marginTop: 20, borderColor: 'gray', borderBottomWidth: 2}}
+                            keyboardType={'numeric'}
+                            maxLength={1}
                             onChangeText={size => this.setState({size})}
                             value={this.state.size}
                         />
@@ -73,7 +76,7 @@ export default class CreateBoardScreen extends Component {
                 </View>
 
                 <View style={styles.button}>
-                    {this.state.title !== "" && this.state.size !== "" &&
+                    {this.state.title !== "" && this.state.size !== "" && this.state.size !== "0" &&
                     <Button
                         title="Save"
                         onPress={() => {
