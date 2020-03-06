@@ -50,7 +50,6 @@ export default class BoardScreen extends Component {
         const {navigate} = this.props.navigation;
 
         return this.state.notes.map((doc) => {
-            console.log("Board: "+doc.id)
             return (
                 <Draggable view={this.state.view} id={this.props.navigation.getParam("id")} title={doc.data().title}
                            key={doc.id} back={"Board"} note={"Note"} noteId={doc.id}
@@ -102,7 +101,6 @@ export default class BoardScreen extends Component {
                         <Button
                             title="Add Note"
                             onPress={() => {
-                                console.log("damn: " + this.props.navigation.getParam("id"))
                                 navigate('CreateNote', {
                                     id: this.props.navigation.getParam("id"),
                                     back: 'Board'

@@ -30,9 +30,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-//TODO: center title
-//TODO: make drawer visible
-
 let HomeNavigator = createStackNavigator(
     {
         Home: HomeScreen,
@@ -55,10 +52,7 @@ let HomeNavigator = createStackNavigator(
 let FavouriteNavigator = createStackNavigator(
     {
         Favourite: FavouriteBoardScreen,
-        EditBoard: EditBoardScreen,
-        CreateNote: CreateNoteScreen,
         FavouriteNote: FavouriteNoteScreen,
-        EditNote: EditNoteScreen,
     },
     {
         initialRouteName: 'Favourite',

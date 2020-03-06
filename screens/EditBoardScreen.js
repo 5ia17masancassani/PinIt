@@ -69,7 +69,7 @@ export default class EditBoardScreen extends Component {
 
         firebase.auth().onAuthStateChanged(user => {
             db.collection("users").doc("id: " + user.uid).collection("boards").doc(this.props.navigation.getParam("id")).delete().then(function () {
-                console.log("Note successfully deleted!");
+                console.log("Board successfully deleted!");
                 db.collection("users").doc("id: " + user.uid).collection("settings").doc("favourite").set({
                     id: ""
                 })
