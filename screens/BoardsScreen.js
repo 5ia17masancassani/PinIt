@@ -48,7 +48,7 @@ export default class BoardsScreen extends Component {
                     title={doc.data().title}
                     key={doc.id}
                     onPress={() => {
-                        navigate('Board', {id: doc.id, board: doc.data()});
+                        navigate('Board', {id: doc.id, board: doc.data(), boards: this.state.boards});
                     }}
                 />
             )

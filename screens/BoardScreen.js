@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {StyleSheet, Text, View, Button} from 'react-native';
 import Draggable from "../components/Draggable";
 import * as firebase from "firebase";
+import GestureRecognizer, {swipeDirections} from "react-native-swipe-gestures";
 
 
 export default class BoardScreen extends Component {
@@ -17,17 +18,26 @@ export default class BoardScreen extends Component {
                 width: 0,
                 height: 0
             },
-            favourite: ""
+            favourite: "",
+            myText: 'I\'m ready to get swiped!',
+            gestureName: 'none',
+            backgroundColor: '#fff',
+            boardId: 0
+
         }
     }
 
     componentDidMount() {
+        let id = this.props.navigation.getParam("id");
+        this.setState({boardId: id});
         this.props.navigation.addListener('willFocus', (playload) => {
+            console.log("reload Mount")
             this.getNotes()
         })
     }
 
     getNotes() {
+        console.log("getNotes")
         firebase.auth().onAuthStateChanged(user => {
             let db = firebase.firestore();
             let stateNotes = [];
@@ -44,6 +54,9 @@ export default class BoardScreen extends Component {
                 }
             });
         });
+        return (
+            <Text/>
+        )
     }
 
     renderNoteButtons() {
@@ -70,21 +83,75 @@ export default class BoardScreen extends Component {
         })
     }
 
+    onSwipe(gestureName, gestureState) {
+        const {navigate} = this.props.navigation;
+
+        const {SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+        this.setState({gestureName: gestureName});
+        let otherBoards = this.props.navigation.getParam("boards");
+        let index = 0;
+
+        this.props.navigation.getParam("boards").map((doc) => {
+            if (doc.id === this.props.navigation.getParam("id")) {
+                index = otherBoards.indexOf(doc)
+            }
+        });
+
+        switch (gestureName) {
+            case SWIPE_RIGHT:
+                if (index - 1 >= 0) {
+                    navigate('Board', {
+                        id: otherBoards[index - 1].id,
+                        board: otherBoards[index - 1].data(),
+                        boards: otherBoards
+                    });
+                }
+                break;
+            case SWIPE_LEFT:
+                if (index + 1 < otherBoards.length) {
+                    navigate('Board', {
+                        id: otherBoards[index + 1].id,
+                        board: otherBoards[index + 1].data(),
+                        boards: otherBoards
+                    });
+                }
+                break;
+        }
+    }
 
     render() {
         const {navigate} = this.props.navigation;
 
+        const config = {
+            velocityThreshold: 0.1,
+            directionalOffsetThreshold: 100
+        };
+
+        if (this.state.boardId !== this.props.navigation.getParam("id")) {
+            this.setState({boardId: this.props.navigation.getParam("id")});
+            this.getNotes();
+        }
+
 
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
+                <GestureRecognizer
+                    onSwipe={(direction, state) => this.onSwipe(direction, state)}
+                    config={config}
+                    style={{
+                        flex: 1,
+                        backgroundColor: this.state.backgroundColor
+                    }}
+                >
+                    <View style={styles.header}>
 
-                    <View style={styles.headerPartLeft}>
-                        <Text style={{fontSize: 24}}>{this.props.navigation.getParam("board").title}</Text>
+                        <View style={styles.headerPart}>
+                            <Text style={{fontSize: 24}}>{this.props.navigation.getParam("board").title}</Text>
+                        </View>
+
+
                     </View>
-
-
-                </View>
+                </GestureRecognizer>
 
                 <View onLayout={({nativeEvent: {layout: {x, y, width, height}}}) => {
                     this.setViewXY(x, y, width, height)
@@ -121,6 +188,7 @@ export default class BoardScreen extends Component {
                         />
                     </View>
                 </View>
+
             </View>
         )
     }
@@ -152,7 +220,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         backgroundColor: '#eea',
         alignItems: 'center',
-
 
     },
     drag: {

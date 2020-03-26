@@ -17,6 +17,7 @@ import LoadingScreen from "./screens/LoadingScreen.js";
 import LoginScreen from "./screens/LoginScreen.js";
 import NoteScreen from "./screens/NoteScreen";
 import SignUpScreen from "./screens/SignUpScreen.js";
+import CalendarExample from "./screens/CalendarExample.js";
 import * as firebase from "firebase";
 import '@firebase/firestore';
 
@@ -96,7 +97,8 @@ let DrawerNavigator = createDrawerNavigator(
     {
         Home: HomeNavigator,
         Favourite: FavouriteNavigator,
-        Boards: BoardsNavigator
+        Boards: BoardsNavigator,
+        Test: CalendarExample
     },
     {
         initialRouteName: 'Home'

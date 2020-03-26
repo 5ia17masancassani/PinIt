@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import * as firebase from "firebase";
 
 
@@ -53,7 +53,6 @@ export default class HomeScreen extends Component {
 
         return (
             <View style={styles.container}>
-
                 <View style={styles.body}>
                     <View style={styles.bodyPart}>
                         <Text style={styles.flexText}>Boards</Text>

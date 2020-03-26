@@ -1,7 +1,6 @@
 import React, {Component} from "react";
-import {Button, StyleSheet, View, TextInput, Text} from 'react-native';
+import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import * as firebase from "firebase";
-
 
 export default class NoteScreen extends Component {
 
@@ -54,6 +53,11 @@ export default class NoteScreen extends Component {
 
     };
 
+    addToCalendar = () => {
+        
+
+    };
+
     render() {
         const {navigate} = this.props.navigation;
 
@@ -95,15 +99,22 @@ export default class NoteScreen extends Component {
                 </View>
 
                 <View style={styles.button}>
-                    <Button
-                        title="Save"
-                        onPress={() => {
-                            this.buttonPressed();
-                            navigate(this.props.navigation.getParam("back"));
-                        }}
-                    />
+                    <View style={{flex: 1}}>
+                        <Button
+                            title="Save"
+                            onPress={() => {
+                                this.buttonPressed();
+                                navigate(this.props.navigation.getParam("back"));
+                            }}
+                        />
+                    </View>
+                    <View style={{flex: 1}}>
+                        <Button
+                            title="Add to Calendar"
+                            onPress={this.addToCalendar}
+                        />
+                    </View>
                 </View>
-
 
             </View>
         )
@@ -166,6 +177,7 @@ const styles = StyleSheet.create({
     button: {
         flex: 1,
         backgroundColor: '#eea',
+        flexDirection: 'row',
     },
     buttonHeight: {
         height: 50,
